@@ -1,113 +1,574 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
+  SystemChrome.setEnabledSystemUIOverlays([]);
 }
-
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Popup menu animation',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+  MyHomePage({Key? key, }) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 24,vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //Custom App Bar
+            Container(
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Icon(Icons.arrow_back_ios, color: Colors.black87,size: 28,),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: MyPopupMenu(
+                      child: Icon(
+                        Icons.filter_alt_outlined,
+                        key: GlobalKey(),
+                        color: Colors.black87,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Top section
+            Expanded(
+              flex: 3,
+              child: Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Chest",
+                              style: TextStyle(
+                                fontSize: 52,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Text(
+                              "and legs",
+                              style: TextStyle(
+                                fontSize: 32,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: double.maxFinite,
+                      width: 2,
+                      margin: EdgeInsets.symmetric(vertical: 42),
+                      color: Colors.grey.withOpacity(.6),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "AUG",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              "21",
+                              style: TextStyle(
+                                fontSize: 42,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            //Buttons
+            Expanded(
+              flex: 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "Overview",
+                        style: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "Exercises",
+                        style: TextStyle(
+                          color: Colors.black26,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "Muscles",
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            //Most involved
+            Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                "Most Involved",
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            //Graph
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 24),
+                child: ClipPath(
+                  clipper: GraphClipper(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          color: Color(0xff00A8F6),
+                          child: Center(
+                            child: Text(
+                              "Upper Chest",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 4,),
+                      Expanded(
+                        child: Container(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          color: Color(0xff5834F1),
+                          child: Center(
+                            child: Text(
+                              "Quads",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 4,),
+                      Expanded(
+                        child: Container(
+                          width: double.maxFinite,
+                          height: double.maxFinite,
+                          color: Color(0xffFA7504),
+                          child: Center(
+                            child: Text(
+                              "Calf",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            //Others
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Others",
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20
+                      ),
+                    ),
+                    SizedBox(height: 16,),
+                    Text(
+                      "Shin, Deltoid, Biceps, Neck, Abs, Triceps",
+                      style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 16
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+    );
+  }
+}
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+class GraphClipper extends CustomClipper<Path>{
+  @override
+  Path getClip(Size size) {
+    Path p = Path();
+
+    //Cut the path
+    p.moveTo(0,0);
+    p.lineTo(size.width * .3, size.height);
+    p.lineTo(size.width * .7, size.height);
+    p.lineTo(size.width , 0);
+    p.close();
+
+
+    return p;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+
+}
+
+class MyPopupMenu extends StatefulWidget {
+  final Widget child;
+  MyPopupMenu({Key? key,required this.child}) : assert(child.key != null), super(key: key);
+
+  @override
+  _MyPopupMenuState createState() => _MyPopupMenuState();
+}
+
+class _MyPopupMenuState extends State<MyPopupMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: widget.child,
+      onTap: _showPopupMenu,
+    );
+  }
+
+  void _showPopupMenu() {
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context){
+        //Find renderbox object
+        RenderBox renderBox = (widget.child.key as GlobalKey).currentContext?.findRenderObject() as RenderBox;
+        Offset position = renderBox.localToGlobal(Offset.zero);
+        return PopupMenuContent(
+          position: position,
+          size: renderBox.size,
+          onAction: (x){
+            print(x);
+          },
+        );
+      }
+    );
+  }
+}
+
+class PopupMenuContent extends StatefulWidget {
+  final Offset position;
+  final Size size;
+  final ValueChanged<String>? onAction;
+  const PopupMenuContent({Key? key,required this.position, required this.size, this.onAction}) : super(key: key);
+
+  @override
+  _PopupMenuContentState createState() => _PopupMenuContentState();
+}
+
+class _PopupMenuContentState extends State<PopupMenuContent> with SingleTickerProviderStateMixin{
+  //Let's create animation
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(vsync: this,duration: Duration(milliseconds: 200));
+    _animation = Tween<double>(begin: 0.0,end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      _animationController.forward();
     });
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return WillPopScope(
+      onWillPop: ()async{
+        _closePopup("");
+        return false;
+      },
+      child: GestureDetector(
+        onTap: ()=> _closePopup(""),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Container(
+            height: double.maxFinite,
+            width: double.maxFinite,
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 0,
+                  right:  (MediaQuery.of(context).size.width - widget.position.dx) - widget.size.width,
+                  top: widget.position.dy,
+                  child: AnimatedBuilder(
+                    animation: _animationController.view,
+                    builder: (context, child){
+                      return Transform.scale(
+                        scale: _animation.value,
+                        alignment: Alignment.topRight,
+                        child: child,
+                      );
+                    },
+                    child: GestureDetector(
+                      onTap: (){},
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.symmetric(horizontal: 24,vertical: 24),
+                        margin: EdgeInsets.only(left: 64),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(.1),
+                              blurRadius: 8,
+                            )
+                          ]
+                        ),
+                        child: Column(
+                          children: [
+                            //Repeat now
+                            GestureDetector(
+                              onTap: ()=> _closePopup("repeatNow"),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFFF0E3),
+                                        borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: Icon(Icons.repeat, color: Colors.red,),
+                                  ),
+                                  SizedBox(width: 12,),
+                                  Text(
+                                    "Repeat Now",
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //Edit workout
+                            SizedBox(height: 16,),
+
+                            GestureDetector(
+                              onTap: ()=> _closePopup("editWorkout"),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFE1E1FC),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: Icon(Icons.edit, color: Color(0xFF3840A2),),
+                                  ),
+                                  SizedBox(width: 12,),
+                                  Text(
+                                    "Edit Workout",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.7),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //Share workout
+                            SizedBox(height: 16,),
+
+                            GestureDetector(
+                              onTap: ()=> _closePopup("ShareNow"),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFDDF3FD),
+                                      borderRadius: BorderRadius.circular(24),
+                                    ),
+                                    child: Icon(Icons.share, color:Color(0xFF0586C0),),
+                                  ),
+                                  SizedBox(width: 12,),
+                                  Text(
+                                    "Share Now",
+                                    style: TextStyle(
+                                        color: Colors.black.withOpacity(.7),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            //Chat box
+                            SizedBox(height: 32,),
+
+                            GestureDetector(
+                              onTap: ()=> _closePopup("getHelp"),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 150,
+                                padding: EdgeInsets.symmetric(horizontal: 16,vertical: 16),
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFC2E3F6),
+                                    borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.messenger_outline_rounded,
+                                        color: Color(0xff1e93ad),
+                                        size: 44,
+                                      ),
+                                      SizedBox(height: 4,),
+                                      Text(
+                                        "Get Help",
+                                        style: TextStyle(
+                                            color: Color(0xff1e93ad),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  void _closePopup(String action) {
+    _animationController.reverse().whenComplete((){
+      Navigator.of(context).pop();
+
+      if(action.isNotEmpty) widget.onAction?.call(action);
+    });
   }
 }
