@@ -335,18 +335,22 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
   }
 
   void _showPopupMenu() {
+    //Find renderbox object
+    RenderBox renderBox = (widget.child.key as GlobalKey).currentContext?.findRenderObject() as RenderBox;
+    Offset position = renderBox.localToGlobal(Offset.zero);
+
     showCupertinoDialog(
       context: context,
       barrierDismissible: false,
       builder: (context){
-        //Find renderbox object
-        RenderBox renderBox = (widget.child.key as GlobalKey).currentContext?.findRenderObject() as RenderBox;
-        Offset position = renderBox.localToGlobal(Offset.zero);
         return PopupMenuContent(
           position: position,
           size: renderBox.size,
           onAction: (x){
-            print(x);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: Duration(seconds: 1),
+              content: Text('Action => $x'),
+            ));
           },
         );
       }
@@ -372,11 +376,11 @@ class _PopupMenuContentState extends State<PopupMenuContent> with SingleTickerPr
   @override
   void initState() {
     _animationController = AnimationController(vsync: this,duration: Duration(milliseconds: 200));
-    _animation = Tween<double>(begin: 0.0,end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
+    _animation = Tween<double>(begin: 0.0,end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
     super.initState();
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _animationController.forward();
+       _animationController.forward();
     });
   }
 
@@ -408,12 +412,12 @@ class _PopupMenuContentState extends State<PopupMenuContent> with SingleTickerPr
                   right:  (MediaQuery.of(context).size.width - widget.position.dx) - widget.size.width,
                   top: widget.position.dy,
                   child: AnimatedBuilder(
-                    animation: _animationController.view,
+                    animation: _animationController,
                     builder: (context, child){
                       return Transform.scale(
                         scale: _animation.value,
                         alignment: Alignment.topRight,
-                        child: child,
+                        child: Opacity(opacity: _animation.value,child: child),
                       );
                     },
                     child: GestureDetector(
